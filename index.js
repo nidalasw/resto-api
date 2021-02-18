@@ -1,11 +1,17 @@
 const mysqlConnection = require("./connection");
 const express = require("express");
+const Joi = require('joi');
 const app = express();
+
+
 
 var cors = require("cors");
 app.use(cors());
 
 app.get("/api/item/:id", (req, res) => {
+
+
+  
   mysqlConnection.query(
     `SELECT 
             idItems,
@@ -29,6 +35,10 @@ app.get("/api/item/:id", (req, res) => {
             `,
     req.params.id,
     (err, rows, fields) => {
+      
+
+      console.log(rows);
+
       if (err) throw err;
 
       var newItem;
@@ -72,7 +82,10 @@ app.get("/api/item/:id", (req, res) => {
         newItem.modifierList[idModifierList] = newModifierList[idModifierList];
       }
 
-      newItem.modifierList = newItem.modifierList.filter((x) => x !== null);
+
+      
+      if (rows.length!=0)
+        newItem.modifierList = newItem.modifierList.filter((x) => x !== null);
 
       res.json(newItem);
     }
